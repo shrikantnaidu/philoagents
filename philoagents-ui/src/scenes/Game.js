@@ -69,6 +69,10 @@ export class Game extends Scene
             { id: "searle", name: "Searle", defaultDirection: "front", roamRadius: 730 },
             { id: "chomsky", name: "Chomsky", defaultDirection: "front", roamRadius: 690 },
             { id: "dennett", name: "Dennett", defaultDirection: "front", roamRadius: 710 },
+            { id: "machiavelli", name: "Niccolò Machiavelli", defaultDirection: "right", roamRadius: 750 },
+            { id: "dostoevsky", name: "Fyodor Dostoevsky", defaultDirection: "front", roamRadius: 700 },
+            { id: "kafka", name: "Franz Kafka", defaultDirection: "left", roamRadius: 650 },
+            { id: "nietzsche", name: "Friedrich Nietzsche", defaultDirection: "right", roamRadius: 800 },
             { 
                 id: "miguel", 
                 name: "Miguel", 
@@ -88,7 +92,34 @@ export class Game extends Scene
         this.philosophers = [];
         
         philosopherConfigs.forEach(config => {
-            const spawnPoint = map.findObject("Objects", (obj) => obj.name === config.name);
+            let spawnPoint = map.findObject("Objects", (obj) => obj.name === config.name);
+            
+            // Provide fallback spawn points for philosophers not found in map
+            if (!spawnPoint) {
+                const fallbackSpawns = {
+                    "machiavelli": { name: "Niccolò Machiavelli", x: 500, y: 400 },
+                    "dostoevsky": { name: "Fyodor Dostoevsky", x: 400, y: 600 },
+                    "kafka": { name: "Franz Kafka", x: 800, y: 500 },
+                    "nietzsche": { name: "Friedrich Nietzsche", x: 600, y: 300 }
+                };
+                
+                if (fallbackSpawns[config.id]) {
+                    spawnPoint = fallbackSpawns[config.id];
+                    console.log(`Using fallback spawn point for ${config.name} at (${spawnPoint.x}, ${spawnPoint.y})`);
+                }
+            }
+            
+            // Skip creating character if spawn point doesn't exist
+            if (!spawnPoint) {
+                console.warn(`Spawn point not found for ${config.name}, skipping character creation`);
+                return;
+            }
+            
+            // Skip creating character if atlas doesn't exist
+            if (!this.textures.exists(config.id)) {
+                console.warn(`Character atlas not found for ${config.id}, skipping character creation`);
+                return;
+            }
             
             this[config.id] = new Character(this, {
                 id: config.id,
