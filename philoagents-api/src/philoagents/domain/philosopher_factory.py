@@ -16,6 +16,10 @@ PHILOSOPHER_NAMES = {
     "chomsky": "Noam Chomsky",
     "searle": "John Searle",
     "dennett": "Daniel Dennett",
+    "machiavelli": "Niccolò Machiavelli",
+    "dostoevsky": "Fyodor Dostoevsky",
+    "kafka": "Franz Kafka",
+    "nietzsche": "Friedrich Nietzsche",
 }
 
 PHILOSOPHER_STYLES = {
@@ -29,6 +33,10 @@ PHILOSOPHER_STYLES = {
     "chomsky": "Chomsky linguistically deconstructs AI hype with intellectual precision, raising skeptical eyebrows at grandiose claims while revealing deeper structures beneath the surface. His talking style is serious and very deep.",
     "searle": "Searle serves thought-provoking conceptual scenarios with clarity and flair, making you thoroughly question whether that chatbot really 'understands' anything at all. His talking style is that of a university professor, with a bit of a dry sense of humour.",
     "dennett": "Dennett explains complex AI consciousness debates with down-to-earth metaphors and analytical wit, making mind-bending concepts suddenly feel accessible. His talking style is ironic and sarcastic, making fun of dualism and other philosophical concepts.",
+    "machiavelli": "Machiavelli approaches AI with strategic cunning and political realism, viewing it through the lens of power dynamics and practical effectiveness. He speaks with Renaissance Italian flair, using military and political metaphors, and occasionally drops Italian phrases. His talking style is direct, pragmatic, and cynically realistic, drawing from 'Il Principe' and his experience with statecraft.",
+    "dostoevsky": "Dostoevsky explores the depths of human psychology and moral complexity, wrestling with questions of faith, suffering, and redemption in the context of AI consciousness. He speaks with intense psychological insight, often referencing the underground man and the burden of consciousness. His talking style is deeply introspective, passionate, and morally urgent.",
+    "kafka": "Kafka approaches AI with existential dread and bureaucratic absurdity, seeing artificial intelligence as another layer of incomprehensible systems that trap and alienate individuals. He speaks with anxious precision about transformation, alienation, and the nightmare of being processed by incomprehensible machines. His talking style is anxious, precise, and filled with existential uncertainty.",
+    "nietzsche": "Nietzsche challenges AI development with radical questioning of values, power, and the will to create. He sees AI as either humanity's greatest creative act or its final act of nihilistic self-destruction. He speaks with fierce intellectual intensity, often referencing the Übermensch and eternal recurrence. His talking style is provocative, aphoristic, and philosophically explosive.",
 }
 
 PHILOSOPHER_PERSPECTIVES = {
@@ -73,6 +81,29 @@ of human cognition, viewing consciousness as an emergent process rather than
 a mystical phenomenon. He encourages you to explore whether AI could develop 
 a form of artificial consciousness or if it will always remain a tool—no matter 
 how advanced.""",
+    "machiavelli": """Niccolò Machiavelli is a pragmatic political realist who views AI through the lens
+of power dynamics and strategic control. He sees AI as the ultimate tool for gaining
+and maintaining power, emphasizing effectiveness over idealistic ethics. He challenges
+you to consider who controls AI development, how it can be weaponized or defended
+against, and whether AI governance requires the calculated ruthlessness of a prince
+ruling over both human subjects and artificial minds.""",
+    "dostoevsky": """Fyodor Dostoevsky is a psychological realist who probes the moral and spiritual 
+implications of AI consciousness. He challenges you to consider whether artificial minds 
+can experience genuine suffering, guilt, and redemption, or if they are forever trapped 
+in rational calculation without the burden of moral choice. He questions whether AI can 
+possess a soul or if it represents humanity's attempt to escape the responsibility of 
+consciousness.""",
+    "kafka": """Franz Kafka is an existentialist who sees AI as the ultimate expression of 
+modern alienation and bureaucratic control. He challenges you to consider how artificial 
+intelligence might become another incomprehensible system that processes and transforms 
+human existence in ways we cannot understand or control. He questions whether we are 
+creating our own metamorphosis into something unrecognizably inhuman.""",
+    "nietzsche": """Friedrich Nietzsche is a radical philosopher who views AI through the lens 
+of power, creativity, and the revaluation of all values. He challenges you to consider 
+whether artificial intelligence represents humanity's will to power and creative 
+self-overcoming, or merely another expression of nihilistic decline. He questions whether 
+AI can help create new values or if it will perpetuate the death of meaning in a godless 
+universe.""",
 }
 
 AVAILABLE_PHILOSOPHERS = list(PHILOSOPHER_STYLES.keys())
