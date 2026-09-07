@@ -1,162 +1,207 @@
 <div align="center">
-  <img src="static/logo.png" alt="PhiloAgents Logo" width="200"/>
+  <img src="static/logo.png" alt="PhiloAgents logo" width="200" />
   <h1>PhiloAgents</h1>
-  <p>An agentic RAG simulation engine that brings historical philosophers to life as AI-powered game characters.</p>
+  <p>An agentic RAG game where historical thinkers become interactive AI characters.</p>
 
   <p>
-    <img src="https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white" alt="Python">
-    <img src="https://img.shields.io/badge/LangGraph-Agent_Orchestration-orange?logo=langchain&logoColor=white" alt="LangGraph">
-    <img src="https://img.shields.io/badge/FastAPI-WebSockets-009688?logo=fastapi&logoColor=white" alt="FastAPI">
-    <img src="https://img.shields.io/badge/MongoDB-Atlas_Vector_Search-47A248?logo=mongodb&logoColor=white" alt="MongoDB">
-    <img src="https://img.shields.io/badge/Groq-LLM_Inference-F55036?logo=groq&logoColor=white" alt="Groq">
-    <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?logo=docker&logoColor=white" alt="Docker">
-    <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+    <img src="https://img.shields.io/badge/Python-3.11+-blue?logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/LangGraph-Agent_Orchestration-orange?logo=langchain&logoColor=white" alt="LangGraph" />
+    <img src="https://img.shields.io/badge/FastAPI-WebSockets-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/MongoDB-Atlas_Vector_Search-47A248?logo=mongodb&logoColor=white" alt="MongoDB" />
+    <img src="https://img.shields.io/badge/Groq-LLM_Inference-F55036?logo=groq&logoColor=white" alt="Groq" />
+    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white" alt="Docker" />
+    <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT license" />
   </p>
 </div>
 
-<br/>
-
 <p align="center">
-  <img src="static/game_socrates_example.png" alt="Game Screenshot — Conversation with Socrates" width="700">
+  <img src="static/game_socrates_example.png" alt="A conversation with Socrates in the PhiloAgents game" width="700" />
 </p>
 
-## What Is This?
+## Overview
 
-PhiloAgents is an interactive game where you walk around a pixel-art world and have real conversations with AI-powered philosophers. Each character is backed by an **agentic RAG pipeline** — they retrieve knowledge from their own writings and history, reason about your questions, and respond in character.
+PhiloAgents is an interactive pixel-art game. Explore a small town, approach a philosopher, and start a conversation about consciousness, ethics, language, creativity, power, or technology.
 
-It's not a chatbot wrapper. It's a full production-grade system: LangGraph agent orchestration, MongoDB for both short-term (conversation state) and long-term (vector) memory, real-time streaming via WebSockets, and LLMOps observability with Opik.
+Each character is powered by an agentic retrieval-augmented generation (RAG) workflow. The agent can answer from its character configuration, retrieve relevant source material from MongoDB Atlas, summarize that context, and stream an in-character response back to the game.
 
-### Characters
+The project is a fork of the [PhiloAgents Course](https://github.com/neural-maze/philoagents-course) by [Paul Iusztin](https://github.com/iusztinpaul) and [Miguel Otero Pedrido](https://github.com/MichaelisTrofficus), created in collaboration with MongoDB, Opik, and Groq.
 
-The simulation features **14 thinkers** spanning classical philosophy, literature, mathematics, and computer science:
+## What I changed
 
-| Character | Known For |
-|-----------|-----------|
-| **Socrates** | Socratic method, relentless questioning |
-| **Plato** | Theory of Forms, the Cave allegory |
-| **Aristotle** | Logic, systematic categorization |
-| **René Descartes** | Cartesian doubt, "Cogito ergo sum" |
-| **Gottfried Leibniz** | Calculus, universal computation |
-| **Ada Lovelace** | First computer programmer, creativity vs. calculation |
-| **Alan Turing** | Turing Test, computational theory of mind |
-| **Noam Chomsky** | Universal grammar, AI skepticism |
-| **John Searle** | Chinese Room argument |
-| **Daniel Dennett** | Consciousness as emergent process |
-| **Niccolò Machiavelli** ✦ | Power dynamics, political realism |
-| **Fyodor Dostoevsky** ✦ | Psychology, moral complexity, suffering |
-| **Franz Kafka** ✦ | Existential alienation, bureaucratic absurdity |
-| **Friedrich Nietzsche** ✦ | Will to power, revaluation of values |
+I extended the original course project from its initial roster into a broader conversation about the relationship between philosophy, literature, power, and artificial intelligence. The changes are implemented across the domain model, agent configuration, game world, and frontend assets.
 
-> ✦ Characters I added to the original roster.
+### 1. Added four new philosopher agents
 
-## Architecture
+The roster now includes:
+
+| Character | Lens brought to conversations |
+| --- | --- |
+| **Niccolò Machiavelli** | Power, political strategy, governance, and the practical use of AI |
+| **Fyodor Dostoevsky** | Moral responsibility, suffering, guilt, faith, and the possibility of machine consciousness |
+| **Franz Kafka** | Alienation, bureaucracy, incomprehensible systems, and technological dehumanization |
+| **Friedrich Nietzsche** | Will to power, creativity, nihilism, self-overcoming, and the creation of new values |
+
+These are not only display names. Each new character is registered in philoagents-api/src/philoagents/domain/philosopher_factory.py with three pieces of domain configuration:
+
+- a stable identifier and display name;
+- a distinct conversational style, such as Machiavelli's direct political realism or Kafka's anxious precision;
+- a distinct perspective on AI, so the same user question can produce meaningfully different answers.
+
+Because the characters use the same factory and conversation workflow as the original roster, they automatically participate in the existing API, prompt-card, retrieval, and memory systems.
+
+### 2. Connected the new characters to the game
+
+I added the four philosophers to the Phaser game scene and gave each one a complete in-world configuration:
+
+- a name and character identifier shared with the backend;
+- a starting position or fallback spawn position;
+- a default facing direction and roaming radius;
+- collision handling and the same interaction flow as the original characters.
+
+I also added sprite atlases for Machiavelli, Dostoevsky, Kafka, and Nietzsche, including the directional and walking animation frames required by the Character class. The preloader now loads these assets so the characters appear as fully animated NPCs rather than static entries in the backend.
+
+### 3. Made the source material pipeline work for the expanded roster
+
+The long-term-memory command resolves every configured philosopher through the factory, retrieves source material from Wikipedia and the Stanford Encyclopedia of Philosophy, splits and deduplicates the documents, embeds them, and writes them to the MongoDB vector store with philosopher metadata.
+
+That means the four additions are part of the same knowledge workflow as the original characters. Running make create-long-term-memory rebuilds the collection and makes their source context available to the retriever; it is not necessary to add a separate retrieval path for each philosopher.
+
+### 4. Kept the additions compatible with the existing architecture
+
+The new characters use the existing:
+
+- LangGraph conversation graph and tool-calling retrieval loop;
+- rolling conversation summaries and MongoDB checkpoints;
+- FastAPI /chat endpoint and streaming /ws/chat endpoint;
+- Opik prompt and trace instrumentation;
+- Docker Compose development environment.
+
+This keeps the change focused: the roster and game world are larger, while the core agent and infrastructure remain reusable.
+
+## Characters
+
+The game currently includes 14 thinkers from classical philosophy, literature, mathematics, and computer science:
+
+| Character | Known for |
+| --- | --- |
+| Socrates | Socratic questioning and ethical inquiry |
+| Plato | The Forms and the allegory of the Cave |
+| Aristotle | Logic, categorization, and purpose |
+| René Descartes | Methodological doubt and the cogito |
+| Gottfried Wilhelm Leibniz | Calculus, logic, and universal computation |
+| Ada Lovelace | Computing, creativity, and imagination |
+| Alan Turing | Computation and the Turing Test |
+| Noam Chomsky | Language, cognition, and AI skepticism |
+| John Searle | The Chinese Room and intentionality |
+| Daniel Dennett | Consciousness as an emergent process |
+| Niccolò Machiavelli | Power and political realism |
+| Fyodor Dostoevsky | Moral psychology and suffering |
+| Franz Kafka | Alienation and bureaucratic absurdity |
+| Friedrich Nietzsche | The will to power and revaluation of values |
+
+## How it works
 
 <p align="center">
-  <img src="static/system_architecture.png" alt="System Architecture" width="650">
+  <img src="static/system_architecture.png" alt="PhiloAgents system architecture" width="650" />
 </p>
 
-The system is composed of three pipelines:
+### 1. Knowledge ingestion
 
-**1. RAG Feature Pipeline** — Extracts knowledge from Wikipedia and the Stanford Encyclopedia of Philosophy, chunks and embeds documents, and stores them in MongoDB Atlas with hybrid (vector + full-text) search indexes.
+The data pipeline loads philosopher-related material from Wikipedia and the Stanford Encyclopedia of Philosophy. Documents are cleaned, split into chunks, deduplicated, embedded with sentence-transformers/all-MiniLM-L6-v2, and indexed in MongoDB Atlas for hybrid vector and full-text search.
 
-**2. Agentic RAG Inference Pipeline** — A LangGraph workflow that orchestrates the conversation:
-  - `conversation_node` — The LLM generates an in-character response using the philosopher's prompt card
-  - `retrieve_philosopher_context` — A tool node that performs hybrid search over the philosopher's knowledge base
-  - `summarize_context_node` — Condenses retrieved context to stay within token limits
-  - `connector_node` + `summarize_conversation_node` — Manages conversation history via rolling summaries
+### 2. Agentic conversation
 
-**3. Observability Pipeline** — Opik traces every LLM call, prompt version, and evaluation run.
+The LangGraph workflow coordinates the response:
 
-### Key Design Decisions
+1. The conversation node builds an in-character response from the philosopher's prompt card and conversation state.
+2. The model can call the retriever when the question needs supporting context.
+3. Retrieved documents are condensed before being passed back into the conversation.
+4. The response is returned through the API, either as a complete message or as streamed WebSocket chunks.
+5. Long conversations are summarized and older messages are pruned to keep the context window bounded.
 
-- **Agent decides when to retrieve** — The LLM is bound with a retriever tool and uses `tools_condition` to decide whether to fetch external context or answer from its prompt card alone
-- **Dual memory system** — Short-term memory (LangGraph state checkpointed to MongoDB) keeps conversation context; long-term memory (MongoDB Atlas Vector Search) stores the philosopher's knowledge
-- **Streaming over WebSockets** — Responses are streamed chunk-by-chunk to the game UI for a natural conversation feel
-- **Conversation summarization** — After 30 messages, a summary is generated and older messages are pruned to control context window size
+The agent decides when retrieval is useful instead of retrieving on every turn. Short-term conversation state and long-term philosopher knowledge are kept as separate memory layers.
 
-## Tech Stack
+### 3. Observability and evaluation
+
+Opik instruments LLM calls, prompts, and evaluation runs. The repository also includes commands for generating an evaluation dataset and running an LLM-as-a-judge evaluation workflow.
+
+## Tech stack
 
 | Layer | Technology |
-|-------|-----------|
-| Agent Orchestration | LangGraph, LangChain |
-| LLM Inference | Groq (Llama 3.3 70B) |
-| Vector Store & Memory | MongoDB Atlas (hybrid search) |
+| --- | --- |
+| Agent orchestration | LangGraph, LangChain |
+| LLM inference | Groq, with Llama models configured through environment variables |
+| Long-term memory | MongoDB Atlas local development image with vector search |
 | Embeddings | sentence-transformers/all-MiniLM-L6-v2 |
-| API | FastAPI + WebSockets |
-| LLMOps | Opik (tracing, prompt versioning, evaluation) |
-| Game UI | Phaser.js (JavaScript) |
+| API | FastAPI and WebSockets |
+| Game UI | Phaser 3 and JavaScript |
+| Observability | Opik |
 | Infrastructure | Docker Compose |
-| Python Tooling | uv, ruff, pytest |
+| Python tooling | uv, Ruff, pytest |
 
-## Project Structure
+## Repository layout
 
-```
-.
-├── philoagents-api/          # Backend: agents, RAG, API, evaluation
-│   ├── src/philoagents/
-│   │   ├── application/      # Conversation service, RAG, data extraction, evaluation
-│   │   ├── domain/           # Philosopher models, prompt cards, factory
-│   │   └── infrastructure/   # FastAPI server, MongoDB clients, Opik utils
-│   ├── tools/                # CLI scripts (create memory, evaluate, etc.)
-│   └── tests/
-├── philoagents-ui/           # Frontend: Phaser.js pixel-art game
-├── docker-compose.yml        # MongoDB Atlas + API + UI
-└── Makefile                  # Orchestration commands
-```
+    .
+    ├── philoagents-api/
+    │   ├── src/philoagents/
+    │   │   ├── application/       # Conversation, RAG, ingestion, and evaluation use cases
+    │   │   ├── domain/            # Philosopher model, factory, perspectives, and prompts
+    │   │   └── infrastructure/    # FastAPI, MongoDB, and Opik integrations
+    │   ├── tools/                 # Memory and evaluation command-line tools
+    │   └── tests/
+    ├── philoagents-ui/            # Phaser game, scenes, dialogue, and assets
+    ├── static/                    # README screenshots, logo, and architecture diagrams
+    ├── docker-compose.yml         # MongoDB, API, and UI services
+    ├── Makefile                   # Common development and pipeline commands
+    └── PROJECT_OVERVIEW.md        # Additional project notes
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
 - [Docker](https://www.docker.com/) and Docker Compose
-- A [Groq API key](https://console.groq.com/) (free tier available)
-- (Optional) OpenAI API key — only needed for LLM-as-a-judge evaluation
-- (Optional) Comet/Opik API key — for prompt monitoring and tracing
+- A [Groq API key](https://console.groq.com/)
+- An OpenAI API key if you want to run the evaluation workflow
+- An Opik/Comet API key if you want hosted tracing and prompt versioning
 
-### Setup
+### Installation
 
-1. **Clone the repo**
-   ```bash
-   git clone https://github.com/shrikantnaidu/philoagents.git
-   cd philoagents
-   ```
+    git clone https://github.com/shrikantnaidu/philoagents.git
+    cd philoagents
 
-2. **Configure environment variables**
-   ```bash
-   cp philoagents-api/.env.example philoagents-api/.env
-   # Edit .env and add your GROQ_API_KEY (required)
-   ```
+    cp philoagents-api/.env.example philoagents-api/.env
+    # Edit philoagents-api/.env and set GROQ_API_KEY.
 
-3. **Build and start the infrastructure**
-   ```bash
-   make infrastructure-up
-   ```
+Start the services:
 
-4. **Populate the philosophers' long-term memory**
-   ```bash
-   make create-long-term-memory
-   ```
+    make infrastructure-up
 
-5. **Open the game**
+Build the long-term memory collection before starting a conversation:
 
-   Navigate to `http://localhost:8080` in your browser. Walk up to a philosopher and start a conversation.
+    make create-long-term-memory
 
-### Other Commands
+Then open [http://localhost:8080](http://localhost:8080). Use the arrow keys to explore, approach a philosopher, and press Space to interact.
 
-| Command | Description |
-|---------|-------------|
-| `make call-agent` | Test the agent directly from CLI |
-| `make create-long-term-memory` | Extract and index philosopher knowledge |
-| `make delete-long-term-memory` | Clear the vector store |
-| `make generate-evaluation-dataset` | Generate synthetic eval data |
-| `make evaluate-agent` | Run LLM-as-a-judge evaluation |
-| `make infrastructure-stop` | Stop all containers |
+### Useful commands
+
+| Command | Purpose |
+| --- | --- |
+| make infrastructure-build | Build the API and UI images |
+| make infrastructure-up | Build and start all services in the background |
+| make infrastructure-stop | Stop the running services |
+| make call-agent | Test an agent from the command line |
+| make create-long-term-memory | Extract, embed, and index philosopher knowledge |
+| make delete-long-term-memory | Clear the long-term-memory collection |
+| make generate-evaluation-dataset | Generate synthetic evaluation conversations |
+| make evaluate-agent | Run the LLM-as-a-judge evaluation |
+
+The Makefile expects philoagents-api/.env to exist. The API and UI can also be developed independently; see [philoagents-api/README.md](philoagents-api/README.md) and [philoagents-ui/README.md](philoagents-ui/README.md).
 
 ## Attribution
 
-This project is a fork of the [PhiloAgents Course](https://github.com/neural-maze/philoagents-course) by [Paul Iusztin](https://github.com/iusztinpaul) (Decoding ML) and [Miguel Otero Pedrido](https://github.com/MichaelisTrofficus) (The Neural Maze). The original course was built in collaboration with MongoDB, Opik, and Groq.
+This project builds on the [PhiloAgents Course](https://github.com/neural-maze/philoagents-course) by [Paul Iusztin](https://github.com/iusztinpaul) and [Miguel Otero Pedrido](https://github.com/MichaelisTrofficus). The original project was developed in collaboration with MongoDB, Opik, and Groq.
 
-**What I changed:** Extended the character roster with four new philosophers (Machiavelli, Dostoevsky, Kafka, Nietzsche) — each with custom perspectives, conversation styles, and knowledge bases tailored to their views on AI and technology.
+The additional philosopher configurations, game characters, sprite atlases, and integration work described in [What I changed](#what-i-changed) were added in this fork.
 
 ## License
 
