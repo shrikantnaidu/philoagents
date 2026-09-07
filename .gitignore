@@ -29,6 +29,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+PROJECT_OVERVIEW.md
 
 ### macOS Patch ###
 # iCloud generated files
@@ -203,6 +204,7 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
+
 # IPython
 profile_default/
 ipython_config.py
@@ -312,5 +314,8 @@ pyrightconfig.json
 # Ignore all local history of files
 .history
 .ionide
+
+# IDE
+.kiro
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,python,visualstudiocode,pycharm+all
